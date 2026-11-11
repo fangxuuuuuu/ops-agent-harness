@@ -1,7 +1,9 @@
 # Agent Harness for an Operations Assistant — Design Report
 
-Author: [fangxu] · Assessment: Senior AI Engineer — Agent Harness
+Author: fangxu · Assessment: Senior AI Engineer — Agent Harness
 Date: 2026-11-11
+Code: https://github.com/fangxuuuuuu/ops-agent-harness
+Mock dataset: https://drive.google.com/file/d/1inZNz2YlQEmYlNIvPWxT_vrJjZczUhLr/view?usp=sharing
 
 ---
 
