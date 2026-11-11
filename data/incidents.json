@@ -1,0 +1,18 @@
+[
+  {
+    "id": "INC-4f1a2b3c",
+    "title": "payment-api elevated 5xx after release 2.41.0",
+    "description": "Error rate 7% on POST /v1/payments starting 2026-10-28T10:02Z, 20 minutes after release 2.41.0. Rolled back, error rate recovered.",
+    "severity": "high",
+    "status": "resolved",
+    "created_at": "2026-10-28T10:04:00Z"
+  },
+  {
+    "id": "INC-9d8e7f60",
+    "title": "search-service indexing lag over 15 minutes",
+    "description": "Indexer queue backed up after a large catalog import. Restarted indexer pod, lag recovered under 1 minute.",
+    "severity": "medium",
+    "status": "resolved",
+    "created_at": "2026-11-02T03:44:00Z"
+  }
+]

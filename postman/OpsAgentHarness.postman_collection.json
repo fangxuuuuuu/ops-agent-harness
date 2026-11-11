@@ -1,0 +1,109 @@
+{
+  "info": {
+    "name": "Ops Agent Harness",
+    "description": "REST collection for the Agent Harness assessment: bounded LLM-tool loop with validation, approval gate (create_incident), execution traces. Recommended flow: Health -> Create Execution -> poll Get Execution (status becomes AWAITING_APPROVAL) -> List Pending Approvals -> Decide Approval (approved/rejected) -> poll Get Execution -> Get Steps.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://127.0.0.1:8000" },
+    { "key": "execution_id", "value": "" },
+    { "key": "approval_id", "value": "" },
+    { "key": "objective", "value": "Check the status of payment-api and open an incident if it is degraded" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": { "method": "GET", "url": "{{baseUrl}}/health" }
+    },
+    {
+      "name": "Create Execution",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const body = pm.response.json();",
+              "pm.collectionVariables.set('execution_id', body.execution_id);",
+              "pm.test('accepted', () => pm.expect(pm.response.code).to.eql(202));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"objective\": \"{{objective}}\"\n}"
+        },
+        "url": "{{baseUrl}}/executions",
+        "description": "Starts an execution. The loop runs in the background; if it proposes create_incident it will pause in AWAITING_APPROVAL."
+      }
+    },
+    {
+      "name": "Get Execution (status / final answer)",
+      "request": { "method": "GET", "url": "{{baseUrl}}/executions/{{execution_id}}" }
+    },
+    {
+      "name": "Get Execution Steps (trace)",
+      "request": { "method": "GET", "url": "{{baseUrl}}/executions/{{execution_id}}/steps" }
+    },
+    {
+      "name": "List Executions",
+      "request": { "method": "GET", "url": "{{baseUrl}}/executions" }
+    },
+    {
+      "name": "List Pending Approvals",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const body = pm.response.json();",
+              "if (body.approvals && body.approvals.length > 0) {",
+              "  pm.collectionVariables.set('approval_id', body.approvals[0].id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": { "method": "GET", "url": "{{baseUrl}}/approvals?status=pending" }
+    },
+    {
+      "name": "Decide Approval (approved)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"decision\": \"approved\",\n  \"decided_by\": \"oncall-engineer\",\n  \"comment\": \"Degradation confirmed on dashboard\"\n}"
+        },
+        "url": "{{baseUrl}}/approvals/{{approval_id}}/decision",
+        "description": "Executes the pending create_incident call and resumes the agent loop."
+      }
+    },
+    {
+      "name": "Decide Approval (rejected)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"decision\": \"rejected\",\n  \"decided_by\": \"oncall-engineer\",\n  \"comment\": \"Not needed yet\"\n}"
+        },
+        "url": "{{baseUrl}}/approvals/{{approval_id}}/decision",
+        "description": "Rejects the pending call; the rejection is fed back to the LLM so it can still answer without the side effect."
+      }
+    },
+    {
+      "name": "Get Approval",
+      "request": { "method": "GET", "url": "{{baseUrl}}/approvals/{{approval_id}}" }
+    },
+    {
+      "name": "Cancel Execution",
+      "request": { "method": "POST", "url": "{{baseUrl}}/executions/{{execution_id}}/cancel" }
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+[
+  {
+    "name": "payment-api",
+    "status": "degraded",
+    "region": "ap-southeast-1",
+    "owner": "payments-team",
+    "last_deployment": "2026-11-10T08:15:00Z",
+    "fail_times": 0,
+    "slow_ms": 0
+  },
+  {
+    "name": "checkout-service",
+    "status": "healthy",
+    "region": "ap-southeast-1",
+    "owner": "commerce-team",
+    "last_deployment": "2026-11-09T14:00:00Z",
+    "fail_times": 0,
+    "slow_ms": 0
+  },
+  {
+    "name": "checkout-db",
+    "status": "healthy",
+    "region": "ap-southeast-1",
+    "owner": "data-platform-team",
+    "last_deployment": "2026-11-05T02:30:00Z",
+    "fail_times": 0,
+    "slow_ms": 0
+  },
+  {
+    "name": "auth-service",
+    "status": "healthy",
+    "region": "us-east-1",
+    "owner": "identity-team",
+    "last_deployment": "2026-11-08T19:45:00Z",
+    "fail_times": 0,
+    "slow_ms": 0
+  },
+  {
+    "name": "notification-service",
+    "status": "healthy",
+    "region": "us-east-1",
+    "owner": "platform-team",
+    "last_deployment": "2026-11-07T11:20:00Z",
+    "fail_times": 0,
+    "slow_ms": 0
+  },
+  {
+    "name": "search-service",
+    "status": "degraded",
+    "region": "us-east-1",
+    "owner": "search-team",
+    "last_deployment": "2026-11-10T21:05:00Z",
+    "fail_times": 0,
+    "slow_ms": 0
+  },
+  {
+    "name": "inventory-service",
+    "status": "healthy",
+    "region": "eu-west-1",
+    "owner": "commerce-team",
+    "last_deployment": "2026-11-06T09:10:00Z",
+    "fail_times": 0,
+    "slow_ms": 0
+  },
+  {
+    "name": "reporting-service",
+    "status": "healthy",
+    "region": "eu-west-1",
+    "owner": "data-platform-team",
+    "last_deployment": "2026-11-04T16:55:00Z",
+    "fail_times": 0,
+    "slow_ms": 0
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "id": "KB-001",
+    "title": "payment-api degradation runbook",
+    "tags": ["payment-api", "degraded", "incident", "runbook"],
+    "body": "When payment-api reports degraded: 1) check dependency dashboard checkout-db and payment-gateway; 2) if error rate > 5%, create a high severity incident; 3) roll back the last deployment if the degradation started within 30 minutes of a release; 4) notify the payments on-call."
+  },
+  {
+    "id": "KB-002",
+    "title": "Incident severity matrix",
+    "tags": ["incident", "severity", "policy"],
+    "body": "severity low: cosmetic or single user impact. medium: single service degraded with a workaround. high: customer-facing impact or revenue path affected. critical: full outage of a revenue path or data integrity risk."
+  },
+  {
+    "id": "KB-003",
+    "title": "On-call escalation guide",
+    "tags": ["oncall", "escalation", "incident"],
+    "body": "Primary on-call handles first response within 15 minutes. If not acknowledged, escalate to secondary, then to the service owner. Always link the incident ticket in the team channel."
+  },
+  {
+    "id": "KB-004",
+    "title": "checkout-service troubleshooting",
+    "tags": ["checkout-service", "troubleshooting"],
+    "body": "checkout-service slowness is usually caused by downstream payment-api latency or redis cache misses. Verify payment-api status first, then check redis memory and hit rate."
+  },
+  {
+    "id": "KB-005",
+    "title": "Deployment rollback procedure",
+    "tags": ["deploy", "rollback", "runbook"],
+    "body": "Use the deployment console, select the service, click Rollback to previous revision. Rollbacks take 3-5 minutes. Always create an incident before rolling back a revenue-path service."
+  },
+  {
+    "id": "KB-006",
+    "title": "Database failover runbook",
+    "tags": ["checkout-db", "database", "failover"],
+    "body": "If checkout-db fails over, verify replication lag before reopening writes. Expected failover time is under 90 seconds. Check the events table for the failover trigger."
+  },
+  {
+    "id": "KB-007",
+    "title": "Notification service rate limits",
+    "tags": ["notification-service", "limits"],
+    "body": "notification-service allows 1000 messages per minute per template. Exceeding the limit returns 429 and messages are queued, not lost. Backpressure resolves within 2 minutes."
+  },
+  {
+    "id": "KB-008",
+    "title": "auth-service token rotation",
+    "tags": ["auth-service", "security", "tokens"],
+    "body": "auth-service rotates signing keys every 24 hours. Clients cache old keys for up to 1 hour, so brief 401 spikes after rotation are expected and self-heal."
+  },
+  {
+    "id": "KB-009",
+    "title": "Monitoring and alerts overview",
+    "tags": ["monitoring", "alerts", "observability"],
+    "body": "Golden signals: latency, traffic, errors, saturation. Alert routing: page for critical, email for high, dashboard-only for medium and low. Alert silence windows must be approved by the service owner."
+  },
+  {
+    "id": "KB-010",
+    "title": "POST /v1/payments API reference",
+    "tags": ["payment-api", "api", "reference"],
+    "body": "POST /v1/payments charges a payment intent. 402 means the card was declined by the issuer. 503 means the gateway is unavailable; retry with idempotency-key. Sustained 5xx requires an incident."
+  },
+  {
+    "id": "KB-011",
+    "title": "search-service indexing lag",
+    "tags": ["search-service", "indexing"],
+    "body": "search-service indexing lag over 5 minutes indicates the indexer queue is backed up. Restart the indexer pod, then verify lag returns under 1 minute. Do not reindex the full corpus."
+  },
+  {
+    "id": "KB-012",
+    "title": "PII handling in incidents",
+    "tags": ["incident", "pii", "policy", "security"],
+    "body": "Never include customer PII (emails, card numbers, addresses) in incident titles or descriptions. Reference customer IDs instead. The incident system is readable by all engineering staff."
+  }
+]
